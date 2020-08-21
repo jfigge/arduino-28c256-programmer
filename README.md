@@ -1,8 +1,9 @@
 Arduino Nano baed programmer for 28C256 EEPROM.
 Writen by Jason Figge, 2020
 
-      /=== Data>   /============= Address ===========\
-     //////       G////A      H////A      A0\\\\\\\\A14
+```
+     /=== Data>    /============= Address ===========\
+    //////        G////A      H////A      A0\\\\\\\\A14
  +----------+   +-------+   +-------+   +---------------+
  |  Nano    |   | sr-hi |   | sr-lo |   | 28C256 EEPROM |
  +----------+   +-------+   +-------+   +---------------+
@@ -27,21 +28,9 @@ Wiring:
  Nano.11 => EEPROM.OE
  Nano.12 => EEPROM.WE
  Nano.2-9  => EEPROM.I/O0-7
- 
- Warning: Changing pin assignments with require significant
- reworking of all port logic.
+``` 
+Warning: Changing pin assignments will require significant reworking of all port logic.
 
-This code was constructed after watching Ben Eater's videos
-on how to build a 6502 computer, not wanting to pay $57 for
-a programmer, and because I received an SDP enabled chip from
-JameCo.com (is it authentic?).
+This code was constructed after watching Ben Eater's videos on how to build a 6502 computer, not wanting to pay $57 for a programmer, and because I received an SDP enabled chip from JameCo.com. Credit to Bread80 for the inspiration to switch to port manipulation.
 
-After writing a program using standard arduino high level 
-functions I was able to read from the chip, but due to the SDP
-nothing I did would allow me to write any data.  Even after
-trying the unlock sequence. After connecting my o-scope I 
-found the time to write a single byte far exceeded the max
-time allowed to perform a page.  Summizing the lock sequence
-had to be completed within a page, I set about using registry
-manipulation to speed up the process.  Now byte writes are
-in the micro-second range and I can unlock the SDP
+After writing a program using standard arduino high level functions I was able to read from the EEPROM, but due to the SDP nothing I did would allow me to write any data.  Even after trying the unlock sequence. After connecting my o-scope I found the time to write a single byte far exceeded the max time allowed to perform a page write.  Summizing the lock sequence had to be completed within a page, I set about using registry manipulation to speed up the process.  Now byte writes are in the micro-second range and I can unlock the SDP
