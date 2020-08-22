@@ -102,10 +102,13 @@ void setDataDirection(uint8_t direction) {
 }
 
 // Copy the bits of the data word across registers D & B
+// Remember the last I/O7 bit for data polling - waitOnWrite()
+uint8_t waitBit = 0;
 void setData(byte data) {
   setDataDirection(OUTPUT);
   PORTD = (PORTD & 0x03) | (data << 2); // Port D pins 2-7 receive lower 6 bits
   PORTB = (PORTB & 0xFC) | (data >> 6); // Port B pins 8-9 receive upper 2 bits
+  waitBit = PORTB;
 }
 
 // Extract the input pins.  Note these come from PINx, not 
@@ -134,6 +137,13 @@ byte readEEPROM(uint16_t address) {
   setAddress(address);
   // Return the pin data
   return getData();
+}
+
+void waitOnWrite() {
+  setDataDirection(INPUT);
+  while ((PINB & 0x02) != (waitBit & 0x02)) {
+    delayMicroseconds(1);
+  }
 }
 
 // Extract 256 bytes, starting at the supplied address, and display
@@ -175,7 +185,6 @@ void enableSDP() {
   writeEEPROM(0x5555, 0xA0);
 }
 
-unsigned long time;
 void setup() {
 
   // Set shift register pins
