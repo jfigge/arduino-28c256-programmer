@@ -1,4 +1,4 @@
-Arduino Nano baed programmer for 28C256 EEPROM.
+Arduino Nano based programmer for 28C256 EEPROM.
 Writen by Jason Figge, 2020
 
 ```
